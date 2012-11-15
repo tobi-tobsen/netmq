@@ -114,8 +114,6 @@ namespace NetMQ.zmq
 				}
 
 			}
-
-			return true;
 		}
 	}
 }

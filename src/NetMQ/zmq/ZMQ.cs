@@ -500,7 +500,7 @@ namespace NetMQ.zmq
 				{
 					System.Net.Sockets.Socket.Select(inset, outset, errorset, currentTimeoutMicroSeconds);
 				}
-				catch (SocketException ex)
+				catch (SocketException)
 				{
 					// TODO: change to right error
 					ZError.ErrorNumber = ErrorNumber.ESOCKET;

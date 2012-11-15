@@ -15,7 +15,6 @@ namespace NetMQ
 		IMonitoringEventsHandler m_monitoringEventsHandler;
 		bool m_initialized = false;
 
-		MonitorEvent m_monitorEvent;
 		CancellationTokenSource m_cancellationTokenSource = new CancellationTokenSource();
 
 		/// <summary>
@@ -127,7 +126,6 @@ namespace NetMQ
 
 					default:
 						throw new Exception("unknown event " + monitorEvent.Event.ToString());
-						break;
 				}
 			}
 		}
