@@ -67,12 +67,7 @@ namespace NetMQ.zmq
 			{
 			}
 		}
-
-		[DllImport("kernel32.dll")]
-		static extern bool SetHandleInformation(IntPtr hObject, int dwMask, uint dwFlags);
-
-		const int HandleFlagInherit = 0x00000001;
-
+	
 		//  Creates a pair of filedescriptors that will be used
 		//  to pass the signals.
 		private void MakeFDpair()
@@ -102,19 +97,19 @@ namespace NetMQ.zmq
 			listner.Listen(1);
 
 			m_w = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Unspecified);
-
-			SetHandleInformation(m_w.Handle, HandleFlagInherit, 0);
+			
 			m_w.NoDelay = true;
 
 			m_w.Connect(endpoint);
 
-			m_r = listner.Accept();
-
-			SetHandleInformation(m_r.Handle, HandleFlagInherit, 0);
+			m_r = listner.Accept();			
 
 			listner.Close();
 
 			sync.ReleaseMutex();
+
+			// Release the kernel object
+			sync.Dispose();
 		}
 
 		public Socket FD
@@ -135,7 +130,7 @@ namespace NetMQ.zmq
 
 		public bool WaitEvent(int timeout)
 		{
-			return m_r.Poll(timeout % 1000 * 1000, SelectMode.SelectRead);
+			return m_r.Poll(timeout * 1000, SelectMode.SelectRead);
 		}
 
 		public void Recv()
