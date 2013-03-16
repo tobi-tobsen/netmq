@@ -1,23 +1,71 @@
 NetMQ
 =====
 
-NetMQ is port of zeromq to .net.
+NetMQ is 100% native C# port of ZeroMQ.
 
-The project based on zeromq version 3.2, the project is still under development and not stable yet.
-Most of zeromq features are already implemented, including TCP Keep alive and PGM. ePGM is not supported.
+NetMQ is lightweight messaging library which extends the
+standard socket interfaces with features traditionally provided by
+specialised messaging middleware products. NetMQ sockets provide an
+abstraction of asynchronous message queues, multiple messaging patterns,
+message filtering (subscriptions), seamless access to multiple transport
+protocols and more.
 
-The following is still under development:
-* Error handling
-* Support clrzmq API
-* Port the testing from the original project
-* Check compatibility to original zeromq
-* Mono support
-* IPv6
+NetMQ is still under development, although the current repository is pretty stable.
 
-Bonus features planned to be developed:
-* IO completion ports
-* SSL
-* New PUB/SUB sockets that the server decide on the subscriptions of the client (to support permissions on topics).
+
+## Installation
+
+You can find NetMQ in [nuget](https://nuget.org/packages/NetMQ/).
+
+## Using
+
+For using NetMQ make sure you read the [ZeroMQ Guide](http://zguide.zeromq.org/page:all). 
+NetMQ documentation is still work in progress but you can found small example [here](https://gist.github.com/somdoron/5175967).
+
+	using (NetMQContext ctx = NetMQContext.Create())
+	{
+		using (var server = ctx.CreateResponseSocket())
+		{
+			server.Bind("tcp://127.0.0.1:5556");
+ 
+			using (var client = ctx.CreateRequestSocket())
+			{
+				client.Connect("tcp://127.0.0.1:5556");
+ 
+				client.Send("Hello");
+ 
+				string m1 = server.ReceiveString();
+ 
+				Console.WriteLine("From Client: {0}", m1);
+ 
+				server.Send("Hi Back");
+ 
+				string m2 = client.ReceiveString();
+ 
+				Console.WriteLine("From Server: {0}", m2);
+ 
+				Console.ReadLine();
+			}
+		}
+	}
+
+## Contributing
+
+We need help, so if you have good knowledge in C# and ZeroMQ just grab one of the issues and add a pull request.
+We are using [C4 process](http://rfc.zeromq.org/spec:16), so make sure you read this before.
+
+Some of the areas we need help with:
+* Testing with libzmq (original zeromq library) in version 2.2 and 3.2.
+* Porting tests from ZeroMQ to c#.
+* Document the High Level API using C# style comments
+* Test IPv6
+* Compile on Mono and run on linux
+* Make another High Level API which is the same as CLRZMQ
+
+You can also help us with the following
+* Joining our mailing list and be an active member
+* Write tutorials in the github wiki
+* Write about the probject in your blog
 
 ## Mailing list
 
