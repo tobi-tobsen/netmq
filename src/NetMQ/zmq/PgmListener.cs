@@ -43,7 +43,7 @@ namespace NetMQ.zmq
 				m_pgmSocket.InitOptions();
 				m_handle.Listen(m_options.Backlog);
 			}
-			catch (SocketException ex)
+			catch (SocketException)
 			{
 				Close();
 				return false;
@@ -121,7 +121,7 @@ namespace NetMQ.zmq
 			IOThread ioThread = ChooseIOThread(m_options.Affinity);
 
 			SessionBase session = SessionBase.Create(ioThread, false, m_socket,
-																							 m_options, new Address(m_handle.LocalEndPoint));
+													 m_options, new Address(m_handle.LocalEndPoint));
 			session.IncSeqnum();
 			LaunchChild(session);
 			SendAttach(session, pgmSession, false);
