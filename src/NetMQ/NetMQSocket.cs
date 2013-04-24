@@ -358,10 +358,7 @@ namespace NetMQ
 			while (more)
 			{
 				byte[] buffer = Receive(dontWait, out more);
-                if (buffer != null)
-                {
-                    message.Append(buffer);
-                }
+                message.Append(buffer);
 			}
 		}
 

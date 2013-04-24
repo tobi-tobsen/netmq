@@ -137,7 +137,7 @@ namespace NetMQ.Tests
                     req.Send(testmessage);
 
                     var msg = router.ReceiveMessage();
-                    Assert.AreEqual(msg.FrameCount, 2);
+                    Assert.AreEqual(3, msg.FrameCount);
                     Assert.AreEqual(msg[1].ConvertToString(), testmessage);
                 }
             }
