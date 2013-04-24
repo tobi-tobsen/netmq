@@ -122,5 +122,25 @@ namespace NetMQ.Tests
 				}
 			}
 		}
+
+        [Test]
+        public void Issue52_ReqtoRouterBug()
+        {
+            using (var ctx = NetMQContext.Create())
+            {
+                using (NetMQSocket router = ctx.CreateRouterSocket(), req = ctx.CreateRequestSocket())
+                {
+                    router.Bind("inproc://example");
+                    req.Connect("inproc://example");
+
+                    string testmessage = "Simple Messaging Test";
+                    req.Send(testmessage);
+
+                    var msg = router.ReceiveMessage();
+                    Assert.AreEqual(msg.FrameCount, 2);
+                    Assert.AreEqual(msg[1].ConvertToString(), testmessage);
+                }
+            }
+        }
 	}
 }
