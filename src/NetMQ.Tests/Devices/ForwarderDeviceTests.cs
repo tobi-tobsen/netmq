@@ -96,4 +96,28 @@ namespace NetMQ.Tests.Devices
             Assert.AreEqual(10, WorkerReceiveCount);
         }
     }
+
+    [TestFixture]
+    public class ForwardDevicePollerBug_Issue72
+    {
+        [Test]
+        public void ShouldNotBlockAfterDisposeOfContext()
+        {
+            // https://github.com/zeromq/netmq/issues/72: 
+            // "I just instantiated a ForwarderDevice subscribed some topics and then immediately disposed the context. [...] The NetMQ.zmq.Signaler.WaitEvent(int timeout) blocks the processing..."
+
+            var ctx = NetMQContext.Create();
+
+            ForwarderDevice device = new ForwarderDevice(ctx, "inproc://front.addr", "inproc://back.addr");
+            device.FrontendSetup.Subscribe("test");
+            device.Start();
+            
+            var timer = new System.Timers.Timer(1000);
+            timer.Elapsed += (s, e) => { Assert.Fail("Process is blocking"); };
+            timer.Start();
+            // device.Stop(); // <-- if this is missing, the process hangs.
+            ctx.Dispose();
+            timer.Stop();
+        }
+    }
 }

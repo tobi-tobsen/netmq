@@ -11,7 +11,7 @@ namespace NetMQ.Tests
         [STAThread]
         static void Main(string[] args)
         {
-            NUnit.ConsoleRunner.Runner.Main(new string[] { Assembly.GetExecutingAssembly().Location });
+            NUnit.ConsoleRunner.Runner.Main(new string[] { "/fixture:NetMQ.Tests.Devices.ForwardDevicePollerBug_Issue72", Assembly.GetExecutingAssembly().Location });
         }
     }
 }
